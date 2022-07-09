@@ -1,6 +1,8 @@
 package main
 
 import (
+	_ "github.com/go-sql-driver/mysql"
+
 	cli "github.com/jawher/mow.cli"
 	"github.com/khodemobin/db-dumper/cmd"
 	"github.com/khodemobin/db-dumper/config"

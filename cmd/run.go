@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"errors"
-	_ "github.com/go-sql-driver/mysql"
 	cli "github.com/jawher/mow.cli"
 	"github.com/khodemobin/db-dumper/archive"
 	"github.com/khodemobin/db-dumper/backup"
 	"github.com/khodemobin/db-dumper/config"
-	"log"
+	"github.com/khodemobin/db-dumper/storage"
+	"os"
 )
 
 func Run(cmd *cli.Cmd) {
@@ -19,14 +19,14 @@ func Run(cmd *cli.Cmd) {
 				panic(err)
 			}
 
-			if err := runTask(task, db); err != nil {
+			if err := runTask(cfg, task, db); err != nil {
 				panic(err)
 			}
 		}
 	}
 }
 
-func runTask(task config.Task, db *config.Database) error {
+func runTask(config *config.Config, task config.Task, db *config.Database) error {
 	filePath, fileName, err := backup.Backup(db)
 	if err != nil {
 		return err
@@ -37,8 +37,25 @@ func runTask(task config.Task, db *config.Database) error {
 		return err
 	}
 
-	log.Println(archivePath)
-	log.Println(archiveFileName)
+	for _, s := range task.Storages {
+		st, err := findStorage(config, s)
+
+		if err != nil {
+			return err
+		}
+
+		if err := storage.Upload(archivePath, archiveFileName, st); err != nil {
+			return err
+		}
+	}
+
+	if err := os.Remove(filePath); err != nil {
+		return nil
+	}
+
+	if err := os.Remove(archivePath); err != nil {
+		return nil
+	}
 
 	return nil
 }
@@ -51,4 +68,14 @@ func findDB(config *config.Config, task config.Task) (*config.Database, error) {
 	}
 
 	return nil, errors.New("invalid database name")
+}
+
+func findStorage(config *config.Config, storage string) (*config.Storage, error) {
+	for _, v := range config.Storages {
+		if v.Name == storage {
+			return &v, nil
+		}
+	}
+
+	return nil, errors.New("invalid storage name")
 }
