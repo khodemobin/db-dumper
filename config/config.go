@@ -13,7 +13,7 @@ import (
 type Storage struct {
 	Name     string
 	Host     string
-	Port     int
+	Port     string
 	User     string
 	Password string
 	Path     string
@@ -23,7 +23,7 @@ type Storage struct {
 type Database struct {
 	Name     string
 	Host     string
-	Port     int
+	Port     string
 	User     string
 	Password string
 	Database string
@@ -76,7 +76,8 @@ func replaceVariablesWithEnv(data []byte) []byte {
 	re := regexp.MustCompile(`\$\{([A-Z]|[a-z]|_)+\w}`)
 	for _, item := range re.FindAllString(dataString, -1) {
 		envName := findEnvName(item)
-		dataString = strings.ReplaceAll(dataString, item, os.Getenv(envName))
+		env := os.Getenv(envName)
+		dataString = strings.ReplaceAll(dataString, item, env)
 	}
 
 	return []byte(dataString)

@@ -8,7 +8,7 @@ import (
 
 type MysqlConfig struct {
 	Host     string
-	Port     int
+	Port     string
 	User     string
 	Password string
 	Database string
@@ -24,7 +24,7 @@ func Dump(cfg *MysqlConfig) (filePath string, filename string, err error) {
 		}
 	}
 
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.User))
+	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.User))
 	if err != nil {
 		return "", "", err
 	}

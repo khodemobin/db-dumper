@@ -11,14 +11,14 @@ import (
 type FtpConfig struct {
 	Host     string
 	User     string
-	Port     int
+	Port     string
 	Password string
 
 	UploadPath string
 }
 
 func ftpUpload(path, fileName string, cfg *FtpConfig) error {
-	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
+	addr := fmt.Sprintf("%s:%s", cfg.Host, cfg.Port)
 	config := goftp.Config{
 		User:               cfg.User,
 		Password:           cfg.Password,
