@@ -1,8 +1,13 @@
 package config
 
 import (
+	"github.com/joho/godotenv"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
+	"log"
+	"os"
+	"regexp"
+	"strings"
 )
 
 type Storage struct {
@@ -46,12 +51,14 @@ func LoadConfig(filePath string) (*Config, error) {
 		return nil, err
 	}
 
-	//data = replaceVariablesWithEnv(data)
+	data = replaceVariablesWithEnv(data)
 
 	err = yaml.Unmarshal(data, &cfg)
 	if err != nil {
 		return nil, err
 	}
+
+	log.Fatalln(cfg)
 
 	return cfg, nil
 }
@@ -60,30 +67,23 @@ func GetConfig() *Config {
 	return cfg
 }
 
-//func replaceVariablesWithEnv(data []byte) []byte {
-//	// todo ability to replace variables from env
-//	err := godotenv.Load()
-//	if err != nil {
-//		log.Println(".env file not found")
-//	}
-//
-//	var re = regexp.MustCompile(`\$\{([A-Z]|[a-z]|[\_])+\w\}`)
-//	for _, item := range re.FindAllString(string(data), -1) {
-//		varName := findVarName(item)
-//		log.Fatalln(varName)
-//	}
-//
-//	log.Fatalln("ok")
-//	return data
-//}
-//
-//func findVarName(item string) string {
-//	var re = regexp.MustCompile(`\${(.*?)}`)
-//
-//	for _, match := range re.FindAllString(item, -1) {
-//		//return match
-//		log.Println(match)
-//	}
-//
-//	return ""
-//}
+func replaceVariablesWithEnv(data []byte) []byte {
+	dataString := string(data)
+	if err := godotenv.Load(); err != nil {
+		return data
+	}
+
+	re := regexp.MustCompile(`\$\{([A-Z]|[a-z]|_)+\w}`)
+	for _, item := range re.FindAllString(dataString, -1) {
+		envName := findEnvName(item)
+		dataString = strings.ReplaceAll(dataString, item, os.Getenv(envName))
+	}
+
+	return []byte(dataString)
+}
+
+func findEnvName(item string) string {
+	var re = regexp.MustCompile(`^\${(\w+)}$`)
+	match := re.FindStringSubmatch(item)
+	return match[1]
+}
