@@ -21,3 +21,5 @@
 db-dumper
 .env
 config.yaml
+
+tmp_dumps
