@@ -1,8 +1,10 @@
 package config
 
 import (
+	"github.com/joho/godotenv"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
+	"log"
 )
 
 type Storage struct {
@@ -38,6 +40,8 @@ type Config struct {
 	Tasks     []Task
 }
 
+var cfg *Config
+
 func LoadConfig(filePath string) (*Config, error) {
 	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -46,22 +50,25 @@ func LoadConfig(filePath string) (*Config, error) {
 
 	data = replaceVariablesWithEnv(data)
 
-	cfg := Config{}
 	err = yaml.Unmarshal(data, &cfg)
-
 	if err != nil {
 		return nil, err
 	}
 
-	return &cfg, nil
+	return cfg, nil
+}
+
+func GetConfig() *Config {
+	return cfg
 }
 
 func replaceVariablesWithEnv(data []byte) []byte {
-	//todo ability to replace variables from env
-	//err := godotenv.Load()
-	//if err != nil {
-	//	log.Println(".env file not found")
-	//}
+	// todo ability to replace variables from env
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Println(".env file not found")
+	}
 	//
 	//log.Fatalln(string(data))
 	//re := regexp.MustCompile("a(?P<1W>x*)b")
