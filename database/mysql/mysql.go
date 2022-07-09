@@ -39,7 +39,9 @@ func Dump(cfg *MysqlConfig) (filePath string, filename string, err error) {
 		return "", "", err
 	}
 
-	dmp.Close()
+	if err := dmp.Close(); err != nil {
+		return "", "", err
+	}
 
 	return fullPath, filename, nil
 }
