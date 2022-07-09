@@ -2,7 +2,10 @@ package cmd
 
 import (
 	"errors"
+	_ "github.com/go-sql-driver/mysql"
 	cli "github.com/jawher/mow.cli"
+	"github.com/khodemobin/db-dumper/archive"
+	"github.com/khodemobin/db-dumper/backup"
 	"github.com/khodemobin/db-dumper/config"
 	"log"
 )
@@ -24,8 +27,19 @@ func Run(cmd *cli.Cmd) {
 }
 
 func runTask(task config.Task, db *config.Database) error {
-	log.Println(task)
-	log.Println(db)
+	filePath, fileName, err := backup.Backup(db)
+	if err != nil {
+		return err
+	}
+
+	archivePath, archiveFileName, err := archive.Archive(filePath, fileName, &task)
+	if err != nil {
+		return err
+	}
+
+	log.Println(archivePath)
+	log.Println(archiveFileName)
+
 	return nil
 }
 
