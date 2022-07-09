@@ -1,10 +1,8 @@
 package config
 
 import (
-	"github.com/joho/godotenv"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
-	"log"
 )
 
 type Storage struct {
@@ -48,7 +46,7 @@ func LoadConfig(filePath string) (*Config, error) {
 		return nil, err
 	}
 
-	data = replaceVariablesWithEnv(data)
+	//data = replaceVariablesWithEnv(data)
 
 	err = yaml.Unmarshal(data, &cfg)
 	if err != nil {
@@ -62,16 +60,30 @@ func GetConfig() *Config {
 	return cfg
 }
 
-func replaceVariablesWithEnv(data []byte) []byte {
-	// todo ability to replace variables from env
-
-	err := godotenv.Load()
-	if err != nil {
-		log.Println(".env file not found")
-	}
-	//
-	//log.Fatalln(string(data))
-	//re := regexp.MustCompile("a(?P<1W>x*)b")
-
-	return data
-}
+//func replaceVariablesWithEnv(data []byte) []byte {
+//	// todo ability to replace variables from env
+//	err := godotenv.Load()
+//	if err != nil {
+//		log.Println(".env file not found")
+//	}
+//
+//	var re = regexp.MustCompile(`\$\{([A-Z]|[a-z]|[\_])+\w\}`)
+//	for _, item := range re.FindAllString(string(data), -1) {
+//		varName := findVarName(item)
+//		log.Fatalln(varName)
+//	}
+//
+//	log.Fatalln("ok")
+//	return data
+//}
+//
+//func findVarName(item string) string {
+//	var re = regexp.MustCompile(`\${(.*?)}`)
+//
+//	for _, match := range re.FindAllString(item, -1) {
+//		//return match
+//		log.Println(match)
+//	}
+//
+//	return ""
+//}

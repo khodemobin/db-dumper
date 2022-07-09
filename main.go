@@ -16,8 +16,8 @@ func main() {
 
 	app := cli.App("db-dumper", "Database backup/sync tools")
 
-	app.Command("run", "run db-dumper", cmd.CmdRun)
-	app.Command("dump", "dump database", cmd.CmdDump)
+	app.Command("run", "run db-dumper", cmd.Run)
+	app.Command("dump", "dump database", cmd.Dump)
 	//app.Command("config", "manage accounts", func(config *cli.Cmd) {
 	//	config.Command("list", "list accounts", cmdList)
 	//	config.Command("add", "add an account", cmdAdd)

@@ -18,5 +18,5 @@ databases:
     port: "${DB_PORT}"
     user: "${DB_USER}"
     password: "${DB_PASSWORD}"
-    database: "${auth}"
+    database: "${DB_DATABASE}"
     driver: mysql
