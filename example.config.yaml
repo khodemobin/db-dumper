@@ -1,0 +1,22 @@
+tasks:
+  - archiveDriver: zip
+    archivePassword: "${ARCHIVE_PASSWORD}"
+    storages:
+      - ftp_server
+    database: local_db
+storages:
+  - name: ftp_server
+    host: "${FTP_HOST}"
+    port: "${FTP_PORT}"
+    user: "${FTP_USER}"
+    password: "${FTP_PASSWORD}"
+    path: "/public_html/backups/"
+    driver: ftp
+databases:
+  - name: local_db
+    host: "${DB_HOST}"
+    port: "${DB_PORT}"
+    user: "${DB_USER}"
+    password: "${DB_PASSWORD}"
+    database: "${auth}"
+    driver: mysql
