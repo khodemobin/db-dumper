@@ -12,14 +12,14 @@ type MysqlConfig struct {
 	User     string
 	Password string
 	Database string
+	TempPath string
 }
 
 func Dump(cfg *MysqlConfig) (filePath string, filename string, err error) {
-	dumpDir := "tmp_dumps"
 	dumpFilenameFormat := fmt.Sprintf("%s-2006-01-02 15:04:05", cfg.Database)
 
-	if _, err := os.Stat(dumpDir); os.IsNotExist(err) {
-		if err := os.Mkdir(dumpDir, os.ModePerm); err != nil {
+	if _, err := os.Stat(cfg.TempPath); os.IsNotExist(err) {
+		if err := os.Mkdir(cfg.TempPath, os.ModePerm); err != nil {
 			return "", "", err
 		}
 	}
@@ -29,7 +29,7 @@ func Dump(cfg *MysqlConfig) (filePath string, filename string, err error) {
 		return "", "", err
 	}
 
-	dmp, err := register(db, dumpDir, dumpFilenameFormat)
+	dmp, err := register(db, cfg.TempPath, dumpFilenameFormat)
 	if err != nil {
 		return "", "", err
 	}

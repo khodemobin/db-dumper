@@ -4,7 +4,6 @@ import (
 	"github.com/joho/godotenv"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
-	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -38,6 +37,7 @@ type Task struct {
 }
 
 type Config struct {
+	TempPath  string
 	Storages  []Storage
 	Databases []Database
 	Tasks     []Task
@@ -45,20 +45,20 @@ type Config struct {
 
 var cfg *Config
 
-func LoadConfig(filePath string) (*Config, error) {
-	data, err := ioutil.ReadFile(filePath)
+func LoadConfig(configPath, envPath string) (*Config, error) {
+	data, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		return nil, err
 	}
 
-	data = replaceVariablesWithEnv(data)
+	data = replaceVariablesWithEnv(data, envPath)
 
 	err = yaml.Unmarshal(data, &cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Fatalln(cfg)
+	cfg.TempPath = ".tmp_dumps"
 
 	return cfg, nil
 }
@@ -67,9 +67,9 @@ func GetConfig() *Config {
 	return cfg
 }
 
-func replaceVariablesWithEnv(data []byte) []byte {
+func replaceVariablesWithEnv(data []byte, envPath string) []byte {
 	dataString := string(data)
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(envPath); err != nil {
 		return data
 	}
 

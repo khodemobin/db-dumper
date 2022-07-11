@@ -1,4 +1,4 @@
-package backup
+package database
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"github.com/khodemobin/db-dumper/database/mysql"
 )
 
-func Backup(db *config.Database) (filePath string, fileName string, err error) {
+func Dump(db *config.Database) (filePath string, fileName string, err error) {
 	if db.Driver != "mysql" {
 		return "", "", errors.New("invalid database driver")
 	}
@@ -17,5 +17,6 @@ func Backup(db *config.Database) (filePath string, fileName string, err error) {
 		User:     db.User,
 		Password: db.Password,
 		Database: db.Database,
+		TempPath: config.GetConfig().TempPath,
 	})
 }

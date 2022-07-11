@@ -23,3 +23,4 @@ db-dumper
 config.yaml
 
 tmp_dumps
+.tmp_dumps
