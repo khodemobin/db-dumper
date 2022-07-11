@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/briandowns/spinner"
 	cli "github.com/jawher/mow.cli"
-	"github.com/khodemobin/db-dumper/compress"
+	"github.com/khodemobin/db-dumper/archive"
 	"github.com/khodemobin/db-dumper/config"
 	"github.com/khodemobin/db-dumper/database"
 	"github.com/khodemobin/db-dumper/storage"
@@ -42,10 +42,10 @@ func runTask(config *config.Config, task config.Task, db *config.Database) error
 	}
 	sp.Stop()
 
-	/* Start running compress  */
-	fmt.Println("creating compress")
+	/* Start running archive  */
+	fmt.Println("creating archive")
 	sp.Start()
-	compressPath, compressFileName, err := compress.Compress(filePath, fileName, &task)
+	archivePath, archiveFileName, err := archive.Archive(filePath, fileName, &task)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func runTask(config *config.Config, task config.Task, db *config.Database) error
 			return err
 		}
 
-		if err := storage.Upload(compressPath, compressFileName, st); err != nil {
+		if err := storage.Upload(archivePath, archiveFileName, st); err != nil {
 			return err
 		}
 	}
@@ -71,7 +71,7 @@ func runTask(config *config.Config, task config.Task, db *config.Database) error
 	if err := os.Remove(filePath); err != nil {
 		return nil
 	}
-	if err := os.Remove(compressPath); err != nil {
+	if err := os.Remove(archivePath); err != nil {
 		return nil
 	}
 

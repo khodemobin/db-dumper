@@ -29,15 +29,15 @@ type Database struct {
 	Driver   string
 }
 
-type Compress struct {
+type Archive struct {
 	Driver   string `default:"-"`
 	Password string `default:"-"`
 }
 
 type Task struct {
-	Compress Compress
-	Storages []string `yaml:"storages"`
-	Database string   `yaml:"database"`
+	Archive  Archive
+	Storages []string
+	Database string
 }
 
 type Config struct {
