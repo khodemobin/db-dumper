@@ -30,8 +30,8 @@ type Database struct {
 }
 
 type Compress struct {
-	Driver   string
-	Password string
+	Driver   string `default:"-"`
+	Password string `default:"-"`
 }
 
 type Task struct {

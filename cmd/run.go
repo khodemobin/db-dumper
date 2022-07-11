@@ -45,7 +45,7 @@ func runTask(config *config.Config, task config.Task, db *config.Database) error
 	/* Start running compress  */
 	fmt.Println("creating compress")
 	sp.Start()
-	archivePath, archiveFileName, err := compress.Compress(filePath, fileName, &task)
+	compressPath, compressFileName, err := compress.Compress(filePath, fileName, &task)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func runTask(config *config.Config, task config.Task, db *config.Database) error
 			return err
 		}
 
-		if err := storage.Upload(archivePath, archiveFileName, st); err != nil {
+		if err := storage.Upload(compressPath, compressFileName, st); err != nil {
 			return err
 		}
 	}
@@ -71,7 +71,7 @@ func runTask(config *config.Config, task config.Task, db *config.Database) error
 	if err := os.Remove(filePath); err != nil {
 		return nil
 	}
-	if err := os.Remove(archivePath); err != nil {
+	if err := os.Remove(compressPath); err != nil {
 		return nil
 	}
 
