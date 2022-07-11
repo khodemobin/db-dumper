@@ -2,8 +2,8 @@ tasks:
   - storages:
       - ftp_server
     database: local_db
-    compress:
-      driver: zip
+    archive:
+      driver: tar
       password: "${COMPRESS_PASSWORD}"
 storages:
   - name: ftp_server
