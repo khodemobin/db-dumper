@@ -1,9 +1,10 @@
 tasks:
-  - archiveDriver: zip
-    archivePassword: "${ARCHIVE_PASSWORD}"
-    storages:
+  - storages:
       - ftp_server
     database: local_db
+    compress:
+      driver: zip
+      password: "${COMPRESS_PASSWORD}"
 storages:
   - name: ftp_server
     host: "${FTP_HOST}"

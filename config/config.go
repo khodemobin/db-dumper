@@ -29,11 +29,15 @@ type Database struct {
 	Driver   string
 }
 
+type Compress struct {
+	Driver   string
+	Password string
+}
+
 type Task struct {
-	ArchiveDriver   string   `yaml:"archiveDriver"`
-	ArchivePassword string   `yaml:"archivePassword"`
-	Storages        []string `yaml:"storages"`
-	Database        string   `yaml:"database"`
+	Compress Compress
+	Storages []string `yaml:"storages"`
+	Database string   `yaml:"database"`
 }
 
 type Config struct {
@@ -53,8 +57,7 @@ func LoadConfig(configPath, envPath string) (*Config, error) {
 
 	data = replaceVariablesWithEnv(data, envPath)
 
-	err = yaml.Unmarshal(data, &cfg)
-	if err != nil {
+	if err := yaml.Unmarshal(data, &cfg); err != nil {
 		return nil, err
 	}
 

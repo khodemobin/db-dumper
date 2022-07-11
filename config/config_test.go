@@ -12,7 +12,7 @@ func TestLoadConfig(t *testing.T) {
 		cfg, err := LoadConfig(configPath, envPath)
 		assert.NoError(t, err)
 
-		assert.Equal(t, cfg.Tasks[0].ArchiveDriver, "zip")
+		assert.Equal(t, cfg.Tasks[0].Compress.Driver, "zip")
 	})
 
 	t.Run("test load from env successfully", func(t *testing.T) {
@@ -21,7 +21,7 @@ func TestLoadConfig(t *testing.T) {
 		cfg, err := LoadConfig(configPath, envPath)
 		assert.NoError(t, err)
 
-		assert.Equal(t, cfg.Tasks[0].ArchivePassword, "123456")
+		assert.Equal(t, cfg.Tasks[0].Compress.Password, "123456")
 	})
 
 	t.Run("test failed load", func(t *testing.T) {

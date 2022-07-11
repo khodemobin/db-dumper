@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/briandowns/spinner"
 	cli "github.com/jawher/mow.cli"
-	"github.com/khodemobin/db-dumper/archive"
+	"github.com/khodemobin/db-dumper/compress"
 	"github.com/khodemobin/db-dumper/config"
 	"github.com/khodemobin/db-dumper/database"
 	"github.com/khodemobin/db-dumper/storage"
@@ -42,10 +42,10 @@ func runTask(config *config.Config, task config.Task, db *config.Database) error
 	}
 	sp.Stop()
 
-	/* Start running archive  */
-	fmt.Println("creating archive")
+	/* Start running compress  */
+	fmt.Println("creating compress")
 	sp.Start()
-	archivePath, archiveFileName, err := archive.Archive(filePath, fileName, &task)
+	archivePath, archiveFileName, err := compress.Compress(filePath, fileName, &task)
 	if err != nil {
 		return err
 	}
