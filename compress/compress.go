@@ -10,13 +10,22 @@ func Compress(path string, name string, task *config.Task) (filePath string, fil
 		return path, name, nil
 	}
 
-	if task.Compress.Driver != "zip" {
-		return "", "", errors.New("invalid compress driver")
+	if task.Compress.Driver == "zip" {
+		return createZip(&ZipConfig{
+			Path:     path,
+			Name:     name,
+			Password: task.Compress.Password,
+		})
 	}
 
-	return createZip(&ZipConfig{
-		Path:     path,
-		Name:     name,
-		Password: task.Compress.Password,
-	})
+	if task.Compress.Driver == "tar" {
+		return createTar(&TarConfig{
+			Path:     path,
+			Name:     name,
+			Password: task.Compress.Password,
+		})
+	}
+
+	return "", "", errors.New("invalid compress driver")
+
 }

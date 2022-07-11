@@ -43,5 +43,7 @@ func Dump(cfg *MysqlConfig) (filePath string, filename string, err error) {
 		return "", "", err
 	}
 
+	filename += ".sql"
+
 	return fullPath, filename, nil
 }
